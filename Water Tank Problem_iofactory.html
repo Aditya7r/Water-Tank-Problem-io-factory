@@ -1,0 +1,81 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+</head>
+
+<body>
+
+    <div class="jumbotron">
+        <h1 style="text-align: center; font-size: 36px; font-weight: bold;">Water Storage Calculator</h1>
+    </div>
+    
+
+    <py-env>
+        - matplotlib
+        
+        </py-env>
+
+ 
+    <py-script>
+
+        
+        
+        import matplotlib.pyplot as plt
+        
+
+
+        blocks = list(map(int,input().split()))
+
+        max_block_height_left = []
+        block_height = 0
+
+        # Maximum tower height from left to right
+        for i in range(len(blocks)):
+            if blocks[i] > block_height:
+                block_height = blocks[i]
+            max_block_height_left.append(block_height)
+
+        water_volume = 0
+        block_height = 0
+        max_block_height_right = []
+
+        # Maximum tower height from right to left
+        for i in range(len(blocks) - 1, -1, -1): #iterate in reverse
+            if blocks[i] > block_height:
+                block_height = blocks[i]
+            max_block_height_right.append(block_height)
+
+            limit = min(block_height, max_block_height_left[i]) # Determine the maximum height of water at the current position
+            if limit > blocks[i]:
+                water_volume += (limit - blocks[i]) # Calculate the amount of water trapped at the current position
+
+        #calculate water level
+        water_level = []
+
+        # Calculate water level
+        for n in range(len(blocks)):
+            level = max(min(max_block_height_left[n], max_block_height_right[len(blocks) - 1 - n]) - blocks[n], 0)
+            water_level.append(level)
+
+        print("Blocks Input ={}".format(blocks))
+        print("\nTotal Units of water stored: {}".format(water_volume))
+        print("\nUnits of water stored in between the blocks = {}".format(water_level))
+        
+        #plot
+        fig, ax = plt.subplots()
+
+        x = range(len(water_level))
+
+        plt.bar(x,water_level)
+        plt.title('Water Stored in Blocks')
+        plt.xlabel('Blocks')
+        plt.ylabel('Water Levels')
+        fig
+
+
+    </py-script>
+
+
+</body>
+</html>
